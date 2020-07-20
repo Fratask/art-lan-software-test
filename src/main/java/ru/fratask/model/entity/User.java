@@ -1,9 +1,18 @@
-package ru.fratask.model;
+package ru.fratask.model.entity;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+@Entity
 public class User {
 
+    @Id
+    private Long id;
     private String username;
     private String password;
+
+    public User() {
+    }
 
     public User(String username, String password) {
         this.username = username;

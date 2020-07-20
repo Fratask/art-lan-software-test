@@ -1,4 +1,4 @@
-package ru.fratask.model;
+package ru.fratask.model.entity;
 
 import java.util.Date;
 
