@@ -10,7 +10,7 @@ import ru.fratask.model.entity.Animal;
 
 import java.util.List;
 
-@Controller("/animal")
+@Controller("animal")
 public class AnimalController {
 
     @GetMapping

@@ -1,9 +1,11 @@
 package ru.fratask.service;
 
+import org.springframework.stereotype.Service;
 import ru.fratask.model.entity.Animal;
 
 import java.util.List;
 
+@Service
 public class AnimalServiceImpl implements AnimalService {
 
     public Animal add(Animal animal) {
