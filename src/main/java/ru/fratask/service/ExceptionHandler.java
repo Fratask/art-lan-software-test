@@ -21,6 +21,6 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
     @org.springframework.web.bind.annotation.ExceptionHandler(AppException.class)
     @ResponseBody
     public ResponseEntity<AppError> handleAppException(AppException ex) {
-        return ResponseEntity.ok(new AppError(ex.getCode().getCode(), ex.getMessage()));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new AppError(ex.getCode().getCode(), ex.getMessage()));
     }
 }

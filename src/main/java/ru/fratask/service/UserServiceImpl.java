@@ -32,15 +32,23 @@ public class UserServiceImpl implements UserService {
     }
 
     public OAuthAccessToken signIn(SignInDto signInDto) {
-        return null;
+        User user = new User(signInDto.getUsername(), signInDto.getPassword());
+        validateUser(user);
+        user = generateUser(signInDto.getUsername(), signInDto.getPassword());
+        return authorize(user);
     }
 
     private User saveUser(SignUpDto signUpDto) {
         checkNewUser(signUpDto.getUsername());
-        User user = new User();
-        user.setUsername(signUpDto.getUsername());
-        user.setPassword(passwordEncoder.encode(signUpDto.getPassword()));
+        User user = generateUser(signUpDto.getUsername(), signUpDto.getPassword());
         user = userRepository.save(user);
+        return user;
+    }
+
+    private User generateUser(String username, String password) {
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(passwordEncoder.encode(password));
         return user;
     }
 
@@ -48,6 +56,16 @@ public class UserServiceImpl implements UserService {
         userRepository.findByUsername(username).ifPresent(user -> {
             throw new AppException(AppResponseCode.USER_ALREADY_EXISTS);
         });
+    }
+
+    private void validateUser(User user) {
+        Optional<User> existsUser = userRepository.findByUsername(user.getUsername());
+        if (!existsUser.isPresent()) {
+            throw new AppException(AppResponseCode.USER_DOES_NOT_EXISTS);
+        }
+        if (!passwordEncoder.matches(user.getPassword(), existsUser.get().getPassword())) {
+            throw new AppException(AppResponseCode.WRONG_PASSWORD);
+        }
     }
 
     private OAuthAccessToken authorize(User user) {
