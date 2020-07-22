@@ -5,6 +5,9 @@ public enum AppResponseCode {
     USER_DOES_NOT_EXISTS(1, "User does not exists"),
     USER_ALREADY_EXISTS(2, "User already exists"),
     WRONG_PASSWORD(3, "Wrong password"),
+    AUTHORIZATION_HEADER_EMPTY(4, "Authorization header empty"),
+    AUTHORIZATION_HEADER_WRONG_FORMAT(5, "Authorization header wrong format"),
+    AUTHORIZATION_WRONG_TOKEN(6, "Authorization wrong token"),
     ;
 
     private final int code;
