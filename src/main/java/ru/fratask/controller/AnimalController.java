@@ -28,8 +28,8 @@ public class AnimalController {
 
     @GetMapping
     public ResponseEntity<List<Animal>> getAllAnimalsByUser(HttpServletRequest request) {
-        String token = request.getHeader("Authorization");
-        String username = tokenService.findUserByToken(token).getUsername();
+        OAuthAccessToken token = tokenService.getTokenFromRequest(request);
+        String username = token.getUsername();
         return ResponseEntity.ok(animalService.getAllAnimalsByUser(username));
     }
 
