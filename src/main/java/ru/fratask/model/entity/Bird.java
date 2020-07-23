@@ -1,11 +1,11 @@
 package ru.fratask.model.entity;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class Bird extends Animal {
 
-    public Bird(String name, String sex, Date birthday) {
-        super(name, sex, birthday);
+    public Bird(String name, String sex, LocalDateTime birthday, String owner) {
+        super(name, sex, birthday, owner);
     }
 
 }

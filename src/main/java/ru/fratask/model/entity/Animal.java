@@ -4,7 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 public abstract class Animal {
@@ -14,15 +14,17 @@ public abstract class Animal {
     private Long id;
     private String name;
     private String sex;
-    private Date birthday;
+    private LocalDateTime birthday;
+    private String owner;
 
     public Animal() {
     }
 
-    public Animal(String name, String sex, Date birthday) {
+    public Animal(String name, String sex, LocalDateTime birthday, String owner) {
         this.name = name;
         this.sex = sex;
         this.birthday = birthday;
+        this.owner = owner;
     }
 
     public String getName() {
@@ -33,7 +35,48 @@ public abstract class Animal {
         return sex;
     }
 
-    public Date getBirthday() {
+    public LocalDateTime getBirthday() {
         return birthday;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
+    public void setBirthday(LocalDateTime birthday) {
+        this.birthday = birthday;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+
+    public static Animal buildAnimal(String name, String sex, LocalDateTime birthday, AnimalType type, String owner) {
+        Animal animal;
+        switch (type) {
+            case BIRD:
+                animal = new Bird(name, sex, birthday, owner);
+                break;
+            case CAT:
+                animal = new Cat(name, sex, birthday, owner);
+                break;
+            case DOG:
+                animal = new Dog(name, sex, birthday, owner);
+                break;
+            case FISH:
+                animal = new Fish(name, sex, birthday, owner);
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + type);
+        }
+        return animal;
     }
 }
