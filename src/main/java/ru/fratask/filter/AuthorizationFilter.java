@@ -50,16 +50,7 @@ public class AuthorizationFilter implements Filter {
         if (authHeader.split(" ").length != 2) {
             throw new AppException(AppResponseCode.AUTHORIZATION_HEADER_WRONG_FORMAT);
         }
-        if (!authHeader.split(" ")[0].equals("Bearer")) {
-            throw new AppException(AppResponseCode.AUTHORIZATION_HEADER_WRONG_FORMAT);
-        }
-        String token = authHeader.split(" ")[1];
-        if (token.isEmpty()) {
-            throw new AppException(AppResponseCode.AUTHORIZATION_WRONG_TOKEN);
-        }
-        if (!tokenService.isPresent(token)) {
-            throw new AppException(AppResponseCode.AUTHORIZATION_WRONG_TOKEN);
-        }
+        tokenService.getTokenFromRequest(request);
     }
 
     private void validateUriForUser(HttpServletRequest request, HttpServletResponse response) {

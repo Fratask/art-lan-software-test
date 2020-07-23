@@ -7,6 +7,7 @@ import ru.fratask.model.dto.animal.AddAnimalDto;
 import ru.fratask.model.dto.animal.DeleteAnimalDto;
 import ru.fratask.model.dto.animal.UpdateAnimalDto;
 import ru.fratask.model.entity.Animal;
+import ru.fratask.model.entity.OAuthAccessToken;
 import ru.fratask.service.AnimalService;
 import ru.fratask.service.TokenService;
 
@@ -39,9 +40,9 @@ public class AnimalController {
 
     @PostMapping
     public ResponseEntity<Animal> addAnimal(HttpServletRequest request, @RequestBody AddAnimalDto addAnimalDto) {
-        if (addAnimalDto.getOwner().isEmpty() || addAnimalDto.getOwner().equals("")) {
-            String token = request.getHeader("Authorization");
-            String username = tokenService.findUserByToken(token).getUsername();
+        if (addAnimalDto.getOwner() == null || addAnimalDto.getOwner().isEmpty() || addAnimalDto.getOwner().equals("")) {
+            OAuthAccessToken token = tokenService.getTokenFromRequest(request);
+            String username = token.getUsername();
             addAnimalDto.setOwner(username);
         }
         return ResponseEntity.ok(animalService.add(addAnimalDto));
@@ -49,9 +50,9 @@ public class AnimalController {
 
     @PutMapping
     public ResponseEntity<Animal> updateAnimalInfo(HttpServletRequest request, @RequestBody UpdateAnimalDto updateAnimalDto) {
-        if (updateAnimalDto.getOwner().isEmpty() || updateAnimalDto.getOwner().equals("")) {
-            String token = request.getHeader("Authorization");
-            String username = tokenService.findUserByToken(token).getUsername();
+        if (updateAnimalDto.getOwner() == null || updateAnimalDto.getOwner().isEmpty() || updateAnimalDto.getOwner().equals("")) {
+            OAuthAccessToken token = tokenService.getTokenFromRequest(request);
+            String username = token.getUsername();
             updateAnimalDto.setOwner(username);
         }
         return ResponseEntity.ok(animalService.update(updateAnimalDto));
@@ -59,9 +60,9 @@ public class AnimalController {
 
     @DeleteMapping
     public ResponseEntity<Animal> deleteAnimal(HttpServletRequest request, @RequestBody DeleteAnimalDto deleteAnimalDto) {
-        if (deleteAnimalDto.getOwner().isEmpty() || deleteAnimalDto.getOwner().equals("")) {
-            String token = request.getHeader("Authorization");
-            String username = tokenService.findUserByToken(token).getUsername();
+        if (deleteAnimalDto.getOwner() == null || deleteAnimalDto.getOwner().isEmpty() || deleteAnimalDto.getOwner().equals("")) {
+            OAuthAccessToken token = tokenService.getTokenFromRequest(request);
+            String username = token.getUsername();
             deleteAnimalDto.setOwner(username);
         }
         return ResponseEntity.ok(animalService.delete(deleteAnimalDto));
