@@ -13,6 +13,7 @@ public enum AppResponseCode {
     TOKEN_NOT_FOUND(9, "Token not found"),
     USER_WITH_THIS_TOKEN_NOT_FOUND(10, "User with this token not found"),
     ANIMAL_HAS_ANOTHER_OWNER_PERMISSION_DENIED(11, "Animal has another owner. Permission denied"),
+    TOO_MANY_REQUESTS(12, "Too many requests")
     ;
 
     private final int code;

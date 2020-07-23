@@ -8,4 +8,6 @@ public interface TokenService {
     OAuthAccessToken findTokenForUser(String username);
 
     User findUserByToken(String token);
+
+    Boolean isPresent(String token);
 }

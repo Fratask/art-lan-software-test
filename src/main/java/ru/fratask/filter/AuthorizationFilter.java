@@ -1,41 +1,44 @@
 package ru.fratask.filter;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import ru.fratask.dao.RequestRepository;
-import ru.fratask.dao.TokenRepository;
 import ru.fratask.model.AppException;
 import ru.fratask.model.AppResponseCode;
-import ru.fratask.model.entity.OAuthAccessToken;
+import ru.fratask.service.RequestService;
+import ru.fratask.service.TokenService;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Optional;
 
-@Component
 public class AuthorizationFilter implements Filter {
 
-    @Autowired
-    private RequestRepository requestRepository;
+    private final RequestService requestService;
 
-    @Autowired
-    private TokenRepository tokenRepository;
+    private final TokenService tokenService;
 
     private final String[] PUBLIC_URLS = {
             "/user/signUp", "/user/signIn", "/error"
     };
 
+    private final String[] PROTECTED_URLS = {
+            "/user/signUp"
+    };
+
+    public AuthorizationFilter(RequestService requestService, TokenService tokenService) {
+        this.requestService = requestService;
+        this.tokenService = tokenService;
+    }
+
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+        validateUriForUser(httpServletRequest, httpServletResponse);
+        requestService.saveRequest(httpServletRequest);
         if (Arrays.stream(PUBLIC_URLS).noneMatch(s -> httpServletRequest.getRequestURI().equals(s))) {
             validateUserAuth(httpServletRequest, httpServletResponse);
         }
-        validateUriForUser(httpServletRequest, httpServletResponse);
         chain.doFilter(request, response);
     }
 
@@ -54,14 +57,23 @@ public class AuthorizationFilter implements Filter {
         if (token.isEmpty()) {
             throw new AppException(AppResponseCode.AUTHORIZATION_WRONG_TOKEN);
         }
-        Optional<OAuthAccessToken> foundTokenOptional = tokenRepository.findByAccessToken(token);
-        if (!foundTokenOptional.isPresent()) {
+        if (!tokenService.isPresent(token)) {
             throw new AppException(AppResponseCode.AUTHORIZATION_WRONG_TOKEN);
         }
     }
 
     private void validateUriForUser(HttpServletRequest request, HttpServletResponse response) {
+        String currentUri = request.getRequestURI();
+        if (Arrays.asList(PROTECTED_URLS).contains(currentUri)) {
+            String currentIp = request.getRemoteHost();
+            int countRequestsByIp = requestService.findLastForHourRequestsForIp(currentIp).size();
+            if (countRequestsByIp > 10) {
+                throw new AppException(AppResponseCode.TOO_MANY_REQUESTS);
+            }
+        }
 
     }
+
+
 
 }

@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.time.LocalDateTime;
 
 @Entity
 public class Request {
@@ -13,6 +14,8 @@ public class Request {
     private Long id;
     private String uri;
     private String username;
+    private String ip;
+    private LocalDateTime time;
 
     public Request() {
     }
@@ -39,5 +42,21 @@ public class Request {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
+    public LocalDateTime getTime() {
+        return time;
+    }
+
+    public void setTime(LocalDateTime time) {
+        this.time = time;
     }
 }

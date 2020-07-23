@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface RequestRepository extends CrudRepository<Request, Long> {
 
-    List<Request> findAllByUsername(String username);
+    List<Request> findAllByIp(String ip);
 }

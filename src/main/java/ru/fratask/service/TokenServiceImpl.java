@@ -30,4 +30,9 @@ public class TokenServiceImpl implements TokenService {
         User user = userRepository.findByUsername(oAuthAccessToken.getUsername()).orElseThrow(() -> new AppException(AppResponseCode.USER_WITH_THIS_TOKEN_NOT_FOUND));
         return user;
     }
+
+    @Override
+    public Boolean isPresent(String token) {
+        return tokenRepository.findByAccessToken(token).isPresent();
+    }
 }
